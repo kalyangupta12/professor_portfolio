@@ -39,6 +39,15 @@ app.post("/api/contact", async (req, res) => {
   }
 });
 
+app.get("/api/contact", async (req, res) => {
+  try {
+    const contacts = await prisma.contact.findMany()
+    res.status(200).json(contacts)
+  } catch (error) {
+    console.error("Error fetching contacts:", error)
+    res.status(500).json({ error: "Internal server error." })
+  }
+});
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`)

@@ -7,6 +7,7 @@ import { z } from "zod"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
+import axios from "axios"
 import {
   Form,
   FormControl,
@@ -54,9 +55,13 @@ export default function ContactForm() {
     setError(null)
 
     try {
-      await (data)
+      const response = await axios.post("http://localhost:5000/api/contact", data)
+      if (response.status === 200) {
       setIsSubmitted(true)
       form.reset()
+      } else {
+      throw new Error("Failed to send message")
+      }
     } catch (err) {
       setError("There was a problem sending your message. Please try again.")
       console.error(err)
@@ -68,6 +73,10 @@ export default function ContactForm() {
   if (isSubmitted) {
     return (
       <div className="rounded-lg border border-green-200 bg-green-50 p-6 text-center dark:border-green-900 dark:bg-green-950">
+        <Toaster
+          position="top-center"
+          reverseOrder={false}
+        />
         <div className="flex justify-center">
           <CheckCircle className="h-12 w-12 text-green-500" />
         </div>
